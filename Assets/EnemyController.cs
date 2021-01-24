@@ -37,7 +37,11 @@ public class EnemyController : MonoBehaviour
     public GameObject bulletPrefab;
     public Rigidbody2D rigidbody;
     NavMeshAgent agent;
-
+    Vector3 startPositon;
+    public void init(Vector3 p)
+    {
+        startPositon = p;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +50,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        //agent.updatePosition = false;
     }
 
     // Update is called once per frame
@@ -53,10 +58,12 @@ public class EnemyController : MonoBehaviour
     {
         switch (currState)
         {
+
             //case(EnemyState.Idle):
             //    Idle();
             //break;
             case (EnemyState.Wander):
+
                 Wander();
                 break;
             case (EnemyState.Follow):
@@ -66,6 +73,10 @@ public class EnemyController : MonoBehaviour
                 break;
             case (EnemyState.Attack):
                 Attack();
+                break;
+            case (EnemyState.Idle):
+
+                GetComponent<NavMeshAgent>().Warp(startPositon);
                 break;
         }
 
@@ -121,6 +132,7 @@ public class EnemyController : MonoBehaviour
 
     void Follow()
     {
+        //agent.updatePosition = true;
         agent.SetDestination(player.transform.position);
         //rigidbody.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
         //ri.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
@@ -134,6 +146,7 @@ public class EnemyController : MonoBehaviour
             switch (enemyType)
             {
                 case (EnemyType.Melee):
+                    player.GetComponent<Completed.Player>().getAttacked();
                     //GameController.DamagePlayer(1);
                     StartCoroutine(CoolDown());
                     break;

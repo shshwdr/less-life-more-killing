@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic; 		//Allows us to use Lists.
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
 using UnityEngine.AI;
+using System.Collections;
 
 namespace Completed
 	
@@ -133,10 +134,34 @@ namespace Completed
 				Instantiate(tileChoice, randomPosition, Quaternion.identity,parent);
 			}
 		}
-        private void Update()
-        {
 
-			parent.GetComponent<NavMeshSurface2d>().BuildNavMesh();
+		void LayoutEnemyAtRandom(GameObject[] tileArray, int minimum, int maximum)
+		{
+			//Choose a random number of objects to instantiate within the minimum and maximum limits
+			int objectCount = Random.Range(minimum, maximum + 1);
+
+			//Instantiate objects until the randomly chosen limit objectCount is reached
+			for (int i = 0; i < objectCount; i++)
+			{
+				//Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
+				Vector3 randomPosition = RandomPosition();
+
+				//Choose a random tile from tileArray and assign it to tileChoice
+				GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
+
+				//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
+				GameObject enemyInstance = Instantiate(tileChoice, randomPosition, Quaternion.identity, parent);
+				enemyInstance.GetComponent<EnemyController>().init(randomPosition);
+				//tileChoice.GetComponent<NavMeshAgent>().Warp(randomPosition);
+			}
+		}
+		private void Update()
+        {
+            if (parent)
+            {
+
+				parent.GetComponent<NavMeshSurface2d>().BuildNavMesh();
+			}
 		}
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
@@ -157,13 +182,26 @@ namespace Completed
 
 			//Determine number of enemies based on current level number, based on a logarithmic progression
 			int enemyCount = level;//(int)Mathf.Log(level, 2f);
-			
-			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
+
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
 			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
+			StartCoroutine(ExampleCoroutine(enemyCount));
 
 		}
+		IEnumerator ExampleCoroutine(int enemyCount)
+		{
+			//Print the time of when the function is first called.
+			//Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+			//yield on a new YieldInstruction that waits for 5 seconds.
+			yield return new WaitForSeconds(0.1f);
+
+			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
+			LayoutEnemyAtRandom(enemyTiles, enemyCount, enemyCount);
+			//After we have waited 5 seconds print the time again.
+			//Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+		}
 	}
+
 }

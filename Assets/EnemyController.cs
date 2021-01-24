@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum EnemyState
 {
@@ -35,54 +36,59 @@ public class EnemyController : MonoBehaviour
     private Vector3 randomDir;
     public GameObject bulletPrefab;
     public Rigidbody2D rigidbody;
+    NavMeshAgent agent;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         rigidbody = GetComponent<Rigidbody2D>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (currState)
-        {
-            //case(EnemyState.Idle):
-            //    Idle();
-            //break;
-            case (EnemyState.Wander):
-                Wander();
-                break;
-            case (EnemyState.Follow):
-                Follow();
-                break;
-            case (EnemyState.Die):
-                break;
-            case (EnemyState.Attack):
-                Attack();
-                break;
-        }
+        agent.SetDestination(player.transform.position);
+        //switch (currState)
+        //{
+        //    //case(EnemyState.Idle):
+        //    //    Idle();
+        //    //break;
+        //    case (EnemyState.Wander):
+        //        Wander();
+        //        break;
+        //    case (EnemyState.Follow):
+        //        Follow();
+        //        break;
+        //    case (EnemyState.Die):
+        //        break;
+        //    case (EnemyState.Attack):
+        //        Attack();
+        //        break;
+        //}
 
-        if (!notInRoom)
-        {
-            if (IsPlayerInRange(range) && currState != EnemyState.Die)
-            {
-                currState = EnemyState.Follow;
-            }
-            else if (!IsPlayerInRange(range) && currState != EnemyState.Die)
-            {
-                currState = EnemyState.Wander;
-            }
-            if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
-            {
-                currState = EnemyState.Attack;
-            }
-        }
-        else
-        {
-            currState = EnemyState.Idle;
-        }
+        //if (!notInRoom)
+        //{
+        //    if (IsPlayerInRange(range) && currState != EnemyState.Die)
+        //    {
+        //        currState = EnemyState.Follow;
+        //    }
+        //    else if (!IsPlayerInRange(range) && currState != EnemyState.Die)
+        //    {
+        //        currState = EnemyState.Wander;
+        //    }
+        //    if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
+        //    {
+        //        currState = EnemyState.Attack;
+        //    }
+        //}
+        //else
+        //{
+        //    currState = EnemyState.Idle;
+        //}
     }
 
     private bool IsPlayerInRange(float range)

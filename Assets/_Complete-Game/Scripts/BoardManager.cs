@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic; 		//Allows us to use Lists.
-using Random = UnityEngine.Random; 		//Tells Random to use the Unity Engine random number generator.
+using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
+using UnityEngine.AI;
 
 namespace Completed
 	
@@ -9,6 +10,7 @@ namespace Completed
 	
 	public class BoardManager : MonoBehaviour
 	{
+		Transform parent;
 		// Using Serializable allows us to embed a class with sub properties in the inspector.
 		[Serializable]
 		public class Count
@@ -24,9 +26,14 @@ namespace Completed
 				maximum = max;
 			}
 		}
-		
-		
-		public int columns = 8; 										//Number of columns in our game board.
+
+        private void Start()
+        {
+			parent = GameObject.FindGameObjectWithTag("NavMesh").transform;
+
+		}
+
+        public int columns = 8; 										//Number of columns in our game board.
 		public int rows = 8;											//Number of rows in our game board.
 		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of walls per level.
 		public Count foodCount = new Count (1, 5);						//Lower and upper limit for our random number of food items per level.
@@ -64,7 +71,7 @@ namespace Completed
 		void BoardSetup ()
 		{
 			//Instantiate Board and set boardHolder to its transform.
-			boardHolder = new GameObject ("Board").transform;
+			boardHolder = parent;// new GameObject ("Board").transform;
 			
 			//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
 			for(int x = -1; x < columns + 1; x++)
@@ -123,14 +130,19 @@ namespace Completed
 				GameObject tileChoice = tileArray[Random.Range (0, tileArray.Length)];
 				
 				//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-				Instantiate(tileChoice, randomPosition, Quaternion.identity);
+				Instantiate(tileChoice, randomPosition, Quaternion.identity,parent);
 			}
 		}
-		
-		
-		//SetupScene initializes our level and calls the previous functions to lay out the game board
-		public void SetupScene (int level)
+        private void Update()
+        {
+
+			parent.GetComponent<NavMeshSurface2d>().BuildNavMesh();
+		}
+
+        //SetupScene initializes our level and calls the previous functions to lay out the game board
+        public void SetupScene (int level)
 		{
+			parent = GameObject.FindGameObjectWithTag("NavMesh").transform;
 			//Creates the outer walls and floor.
 			BoardSetup ();
 			
@@ -151,6 +163,7 @@ namespace Completed
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
 			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
+
 		}
 	}
 }

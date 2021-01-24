@@ -27,11 +27,17 @@ namespace Completed
 
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;                           //Used to store player food points total during level.
+
+		private float lastFire;
+		public float fireDelay;
+		public GameObject bulletPrefab;
+		public float bulletSpeed;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
-		
-		
+
+
 		//Start overrides the Start function of MovingObject
 		protected void Start ()
 		{
@@ -52,7 +58,7 @@ namespace Completed
 		{
 
 			//Check if we are running either in the Unity editor or in a standalone build.
-#if UNITY_STANDALONE || UNITY_WEBPLAYER
+
 
 			//Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
 			movement.x = Input.GetAxisRaw ("Horizontal");
@@ -61,53 +67,34 @@ namespace Completed
 			movement.y = Input.GetAxisRaw ("Vertical");
 
 			//Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
-#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-			
-			//Check if Input has registered more than zero touches
-			if (Input.touchCount > 0)
-			{
-				//Store the first touch detected.
-				Touch myTouch = Input.touches[0];
-				
-				//Check if the phase of that touch equals Began
-				if (myTouch.phase == TouchPhase.Began)
-				{
-					//If so, set touchOrigin to the position of that touch
-					touchOrigin = myTouch.position;
-				}
-				
-				//If the touch phase is not Began, and instead is equal to Ended and the x of touchOrigin is greater or equal to zero:
-				else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
-				{
-					//Set touchEnd to equal the position of this touch
-					Vector2 touchEnd = myTouch.position;
-					
-					//Calculate the difference between the beginning and end of the touch on the x axis.
-					float x = touchEnd.x - touchOrigin.x;
-					
-					//Calculate the difference between the beginning and end of the touch on the y axis.
-					float y = touchEnd.y - touchOrigin.y;
-					
-					//Set touchOrigin.x to -1 so that our else if statement will evaluate false and not repeat immediately.
-					touchOrigin.x = -1;
-					
-					//Check if the difference along the x axis is greater than the difference along the y axis.
-					if (Mathf.Abs(x) > Mathf.Abs(y))
-						//If x is greater than zero, set horizontal to 1, otherwise set it to -1
-						horizontal = x > 0 ? 1 : -1;
-					else
-						//If y is greater than zero, set horizontal to 1, otherwise set it to -1
-						vertical = y > 0 ? 1 : -1;
-				}
-			}
-			
-#endif
+
 			animator.SetFloat("Horizontal", movement.x);
 			animator.SetFloat("Vertical", movement.y);
 			animator.SetFloat("Speed", movement.sqrMagnitude);
+
+
+			float shootHorizontal = Input.GetAxis("ShootHorizontal");
+			float shootVertical = Input.GetAxis("ShootVertical");
+			if ((shootHorizontal != 0 || shootVertical != 0) && Time.time > lastFire + fireDelay)
+            {
+				Shoot(shootHorizontal, shootVertical); 
+				lastFire = Time.time;
+			}
 		}
 
-        private void FixedUpdate()
+		void Shoot(float x, float y)
+		{
+			GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
+			//bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
+			bullet.GetComponent<Rigidbody2D>().velocity = new Vector3(
+				(x < 0) ? Mathf.Floor(x) * bulletSpeed : Mathf.Ceil(x) * bulletSpeed,
+				(y < 0) ? Mathf.Floor(y) * bulletSpeed : Mathf.Ceil(y) * bulletSpeed,
+				0
+			);
+		}
+
+
+		private void FixedUpdate()
         {
 			rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         }

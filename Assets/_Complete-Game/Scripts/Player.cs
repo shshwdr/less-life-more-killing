@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;	//Allows us to use UI.
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 namespace Completed
 {
@@ -33,10 +34,34 @@ namespace Completed
 		public GameObject bulletPrefab;
 		public float bulletSpeed;
 
+		public GameObject hearts;
+		public int maxHP = 3;
+		int currentHP;
+
+		List<GameObject> heartsList;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
+		void updateHearts()
+        {
+			int i = 0;
+			for (i = 0; i < currentHP; i++)
+            {
+				heartsList[i].SetActive(true);
+            }
+            for (; i < heartsList.Count; i++)
+            {
+				heartsList[i].SetActive(false);
+			}
+        }
+		public void getAttacked(int damage = 1)
+        {
+			currentHP -= damage;
+			currentHP = Mathf.Clamp(currentHP,0, maxHP);
+			updateHearts();
 
+		}
 
 		//Start overrides the Start function of MovingObject
 		protected void Start ()
@@ -50,6 +75,13 @@ namespace Completed
 			//Set the foodText to reflect the current player food total.
 			foodText.text = "Food: " + food;
 			rb = GetComponent<Rigidbody2D>();
+			currentHP = maxHP;
+			heartsList = new List<GameObject>();
+			for (int i = 0;i< hearts.transform.childCount; i++)
+            {
+				GameObject heart = hearts.transform.GetChild(i).gameObject;
+				heartsList.Add(heart);
+            }
 		}
 		
 		
@@ -127,6 +159,7 @@ namespace Completed
 				
 				//Disable the food object the player collided with.
 				other.gameObject.SetActive (false);
+				getAttacked(-1);
 			}
 			
 			//Check if the tag of the trigger collided with is Soda.
@@ -143,6 +176,8 @@ namespace Completed
 				
 				//Disable the soda object the player collided with.
 				other.gameObject.SetActive (false);
+
+				getAttacked(-1);
 			}
 		}
 		

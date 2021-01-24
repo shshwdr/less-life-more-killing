@@ -51,44 +51,43 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(player.transform.position);
-        //switch (currState)
-        //{
-        //    //case(EnemyState.Idle):
-        //    //    Idle();
-        //    //break;
-        //    case (EnemyState.Wander):
-        //        Wander();
-        //        break;
-        //    case (EnemyState.Follow):
-        //        Follow();
-        //        break;
-        //    case (EnemyState.Die):
-        //        break;
-        //    case (EnemyState.Attack):
-        //        Attack();
-        //        break;
-        //}
+        switch (currState)
+        {
+            //case(EnemyState.Idle):
+            //    Idle();
+            //break;
+            case (EnemyState.Wander):
+                Wander();
+                break;
+            case (EnemyState.Follow):
+                Follow();
+                break;
+            case (EnemyState.Die):
+                break;
+            case (EnemyState.Attack):
+                Attack();
+                break;
+        }
 
-        //if (!notInRoom)
-        //{
-        //    if (IsPlayerInRange(range) && currState != EnemyState.Die)
-        //    {
-        //        currState = EnemyState.Follow;
-        //    }
-        //    else if (!IsPlayerInRange(range) && currState != EnemyState.Die)
-        //    {
-        //        currState = EnemyState.Wander;
-        //    }
-        //    if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
-        //    {
-        //        currState = EnemyState.Attack;
-        //    }
-        //}
-        //else
-        //{
-        //    currState = EnemyState.Idle;
-        //}
+        if (!notInRoom)
+        {
+            if (IsPlayerInRange(range) && currState != EnemyState.Die)
+            {
+                currState = EnemyState.Follow;
+            }
+            else if (!IsPlayerInRange(range) && currState != EnemyState.Die)
+            {
+                currState = EnemyState.Wander;
+            }
+            if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
+            {
+                currState = EnemyState.Attack;
+            }
+        }
+        else
+        {
+            currState = EnemyState.Idle;
+        }
     }
 
     private bool IsPlayerInRange(float range)
@@ -122,12 +121,14 @@ public class EnemyController : MonoBehaviour
 
     void Follow()
     {
-        rigidbody.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
+        agent.SetDestination(player.transform.position);
+        //rigidbody.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
         //ri.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
 
     void Attack()
     {
+        agent.SetDestination(transform.position);
         if (!coolDownAttack)
         {
             switch (enemyType)

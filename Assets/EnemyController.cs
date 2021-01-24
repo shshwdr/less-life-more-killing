@@ -176,5 +176,7 @@ public class EnemyController : MonoBehaviour
     {
         //RoomController.instance.StartCoroutine(RoomController.instance.RoomCoroutine());
         Destroy(gameObject);
+
+        GameManager.enemyCount -= 1;
     }
 }

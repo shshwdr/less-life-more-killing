@@ -139,7 +139,7 @@ namespace Completed
 		{
 			//Choose a random number of objects to instantiate within the minimum and maximum limits
 			int objectCount = Random.Range(minimum, maximum + 1);
-
+			GameManager.enemyCount = 0;
 			//Instantiate objects until the randomly chosen limit objectCount is reached
 			for (int i = 0; i < objectCount; i++)
 			{
@@ -153,6 +153,8 @@ namespace Completed
 				GameObject enemyInstance = Instantiate(tileChoice, randomPosition, Quaternion.identity, parent);
 				enemyInstance.GetComponent<EnemyController>().init(randomPosition);
 				//tileChoice.GetComponent<NavMeshAgent>().Warp(randomPosition);
+
+				GameManager.enemyCount += 1;
 			}
 		}
 		private void Update()

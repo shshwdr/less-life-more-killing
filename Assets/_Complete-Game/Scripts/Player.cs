@@ -113,6 +113,11 @@ namespace Completed
 				Shoot(shootHorizontal, shootVertical); 
 				lastFire = Time.time;
 			}
+
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				getAttacked(-1);
+			}
 		}
 
 		void Shoot(float x, float y)
@@ -144,6 +149,8 @@ namespace Completed
 				0
 			);
 			getAttacked();
+
+
 		}
 
 
@@ -157,7 +164,7 @@ namespace Completed
         private void OnTriggerEnter2D (Collider2D other)
 		{
 			//Check if the tag of the trigger collided with is Exit.
-			if(other.tag == "Exit")
+			if(other.tag == "Exit"&&other.GetComponent<Exit>() && other.GetComponent<Exit>().isOpened)
 			{
 				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
 				Invoke ("Restart", restartLevelDelay);

@@ -63,6 +63,7 @@ namespace Completed
 
 		}
 
+
 		//Start overrides the Start function of MovingObject
 		protected void Start ()
 		{
@@ -116,6 +117,25 @@ namespace Completed
 
 		void Shoot(float x, float y)
 		{
+			if(currentHP<=1)
+            {
+				//cant shoot
+				return;
+            }
+
+
+
+			float normalizedX = (x < 0) ? Mathf.Floor(x) : Mathf.Ceil(x);
+
+			float normalizedY = (y < 0) ? Mathf.Floor(y) : Mathf.Ceil(y);
+
+			Vector3 direction = new Vector3(normalizedX, normalizedY,0);
+			//	RaycastHit2D hit = Physics2D.Raycast(transform.position, (Vector2)(direction));
+
+			//if (hit.collider != null)
+			//{
+			//	//it hit a wall, can't 
+			//}
 			GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
 			//bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
 			bullet.GetComponent<Rigidbody2D>().velocity = new Vector3(
@@ -123,6 +143,7 @@ namespace Completed
 				(y < 0) ? Mathf.Floor(y) * bulletSpeed : Mathf.Ceil(y) * bulletSpeed,
 				0
 			);
+			getAttacked();
 		}
 
 

@@ -10,6 +10,7 @@ public class BulletController : MonoBehaviour
     private Vector2 lastPos;
     private Vector2 curPos;
     private Vector2 playerPos;
+    bool hitOnce;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,14 +51,27 @@ public class BulletController : MonoBehaviour
         if (col.tag == "Enemy" && !isEnemyBullet)
         {
             col.gameObject.GetComponent<EnemyController>().Death();
+            //Destroy(gameObject);
+        }
+        if (col.tag == "Player" && !isEnemyBullet&& hitOnce)
+        {
+            col.gameObject.GetComponent<Completed.Player>().getAttacked(-1);
+            //GameController.DamagePlayer(1);
             Destroy(gameObject);
         }
-
         if (col.tag == "Player" && isEnemyBullet)
         {
             col.gameObject.GetComponent<Completed.Player>().getAttacked();
             //GameController.DamagePlayer(1);
             Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!hitOnce && collision.collider.tag != "Player")
+        {
+            hitOnce = true;
         }
     }
 }

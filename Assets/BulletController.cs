@@ -45,8 +45,11 @@ public class BulletController : MonoBehaviour
         yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter2D(Collider2D col)
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+        
+    //}
+    void OnTriggerStay2D(Collider2D col)
     {
         if (col.tag == "Enemy" && !isEnemyBullet)
         {
@@ -79,5 +82,11 @@ public class BulletController : MonoBehaviour
         {
             hitOnce = true;
         }
+        //if (collision.collider.tag == "Player" && !isEnemyBullet && hitOnce)
+        //{
+        //    collision.collider.gameObject.GetComponent<Completed.Player>().getAttacked(-1);
+        //    //GameController.DamagePlayer(1);
+        //    Destroy(gameObject);
+        //}
     }
 }

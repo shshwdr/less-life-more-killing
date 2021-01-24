@@ -43,7 +43,9 @@ namespace Completed
 		public GameObject[] wallTiles;									//Array of wall prefabs.
 		public GameObject[] foodTiles;									//Array of food prefabs.
 		public GameObject[] enemyTiles;									//Array of enemy prefabs.
-		public GameObject[] outerWallTiles;								//Array of outer tile prefabs.
+		public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
+		public GameObject tutorial;
+		public GameObject tutorialEnemy;
 		
 		private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 		private List <Vector3> gridPositions = new List <Vector3> ();	//A list of possible locations to place tiles.
@@ -62,7 +64,7 @@ namespace Completed
 				for(int y = 1; y < rows-1; y++)
 				{
 					//At each index add a new Vector3 to our list with the x and y coordinates of that position.
-					gridPositions.Add (new Vector3(x, y, 0f));
+					gridPositions.Add (new Vector3(y, x, 0f));
 				}
 			}
 		}
@@ -114,6 +116,18 @@ namespace Completed
 			return randomPosition;
 		}
 		
+		void LayoutObjectAtPosition(GameObject ob,Vector3 p)
+        {
+			Instantiate(ob, p, Quaternion.identity, parent);
+		}
+
+        void LayoutEnemyAtPosition(GameObject ob, Vector3 p)
+        {
+
+			//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
+			GameObject enemyInstance = Instantiate(ob, p, Quaternion.identity, parent);
+			enemyInstance.GetComponent<EnemyController>().init(p);
+		}
 		
 		//LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
 		void LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum)
@@ -176,11 +190,18 @@ namespace Completed
 			//Reset our list of gridpositions.
 			InitialiseList ();
 			
-			//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
-			
-			//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
+			if(level == 1)
+            {
+				LayoutObjectAtPosition(tutorial,new Vector3(3.5f,3,0));
+            }
+            else
+            {
+				//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
+				LayoutObjectAtRandom(wallTiles, wallCount.minimum, wallCount.maximum);
+
+				//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
+				LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum);
+			}
 
 			//Determine number of enemies based on current level number, based on a logarithmic progression
 			int enemyCount = level;//(int)Mathf.Log(level, 2f);
@@ -198,9 +219,17 @@ namespace Completed
 
 			//yield on a new YieldInstruction that waits for 5 seconds.
 			yield return new WaitForSeconds(0.1f);
+			if(enemyCount == 1)
+            {
 
+				LayoutEnemyAtPosition(tutorialEnemy, gridPositions[gridPositions.Count - columns / 2]);
+            }
+            else
+			{
+				LayoutEnemyAtRandom(enemyTiles, enemyCount, enemyCount);
+
+			}
 			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-			LayoutEnemyAtRandom(enemyTiles, enemyCount, enemyCount);
 			//After we have waited 5 seconds print the time again.
 			//Debug.Log("Finished Coroutine at timestamp : " + Time.time);
 		}

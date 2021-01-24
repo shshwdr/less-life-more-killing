@@ -65,6 +65,12 @@ public class BulletController : MonoBehaviour
             //GameController.DamagePlayer(1);
             Destroy(gameObject);
         }
+        if (col.tag == "wall" && isEnemyBullet)
+        {
+            //col.gameObject.GetComponent<Completed.Player>().getAttacked();
+            //GameController.DamagePlayer(1);
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

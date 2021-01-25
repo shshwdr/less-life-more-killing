@@ -126,10 +126,14 @@ namespace Completed
 			movement.y = Input.GetAxisRaw ("Vertical");
 
 			//Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
-
+			float speed = movement.sqrMagnitude;
 			animator.SetFloat("Horizontal", movement.x);
 			animator.SetFloat("Vertical", movement.y);
 			animator.SetFloat("Speed", movement.sqrMagnitude);
+            if (speed > 0.01)
+            {
+				GameManager.gameStarted = true;
+            }
 
 
 			float shootHorizontal = Input.GetAxis("ShootHorizontal");

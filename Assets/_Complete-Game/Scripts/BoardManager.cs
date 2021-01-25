@@ -63,6 +63,11 @@ namespace Completed
 				//Within each column, loop through y axis (rows).
 				for(int y = 1; y < rows-1; y++)
 				{
+					if(x ==1 && y == 1)
+                    {
+						//ignore the tile next to player
+						continue;
+                    }
 					//At each index add a new Vector3 to our list with the x and y coordinates of that position.
 					gridPositions.Add (new Vector3(y, x, 0f));
 				}

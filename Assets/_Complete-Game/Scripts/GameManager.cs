@@ -26,6 +26,7 @@ using Completed;
 
 
 		public static int enemyCount;
+		public static bool gameStarted = false;
 		//Awake is always called before any Start functions
 		void Awake()
 		{
@@ -76,6 +77,7 @@ using Completed;
 		{
 			//While doingSetup is true the player can't move, prevent player from moving while title card is up.
 			doingSetup = true;
+			gameStarted = false;
 			enemyCount = 1;
 			//Get a reference to our image LevelImage by finding it by name.
 			levelImage = GameObject.Find("LevelImage");

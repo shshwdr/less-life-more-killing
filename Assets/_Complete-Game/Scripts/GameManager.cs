@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         //Set levelText to display number of levels passed and game over message
-        restartText.text = "After " + level + " days, you starved.";
+        restartText.text = "After " + level + " days, you died.";
 
         //Enable black background image gameObject.
         restartMenu.SetActive(true);

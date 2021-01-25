@@ -40,6 +40,10 @@ namespace Completed
 
 		List<GameObject> heartsList;
 
+		private float lastAttacked;
+		public float invicibleTime;
+		bool isInvincible = true;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
@@ -57,8 +61,30 @@ namespace Completed
         }
 		public void getAttacked(int damage = 1)
         {
+            if (isInvincible)
+            {
+				return;
+            }
+			isInvincible = true;
+			lastAttacked = Time.time;
 			currentHP -= damage;
 			currentHP = Mathf.Clamp(currentHP,0, maxHP);
+			animator.SetBool("GetHit",true); 
+			updateHearts();
+
+		}
+
+		public void getDamage(int damage = 1)
+        {
+			currentHP -= damage;
+			currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+			updateHearts();
+		}
+
+		public void getHealed(int heal = 1)
+		{
+			currentHP += heal;
+			currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 			updateHearts();
 
 		}
@@ -116,7 +142,13 @@ namespace Completed
 
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
-				getAttacked(-1);
+				getHealed();
+			}
+			if (Time.time > lastAttacked + invicibleTime)
+            {
+				isInvincible = false;
+
+				animator.SetBool("GetHit", false);
 			}
 		}
 
@@ -148,7 +180,7 @@ namespace Completed
 				(y < 0) ? Mathf.Floor(y) * bulletSpeed : Mathf.Ceil(y) * bulletSpeed,
 				0
 			);
-			getAttacked();
+			getDamage();
 
 
 		}
@@ -187,7 +219,7 @@ namespace Completed
 				
 				//Disable the food object the player collided with.
 				other.gameObject.SetActive (false);
-				getAttacked(-1);
+				getHealed();
 			}
 			
 			//Check if the tag of the trigger collided with is Soda.
@@ -205,7 +237,7 @@ namespace Completed
 				//Disable the soda object the player collided with.
 				other.gameObject.SetActive (false);
 
-				getAttacked(-1);
+				getHealed();
 			}
 		}
 		

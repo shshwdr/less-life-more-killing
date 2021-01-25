@@ -58,7 +58,7 @@ public class BulletController : MonoBehaviour
         }
         if (col.tag == "Player" && !isEnemyBullet&& hitOnce)
         {
-            col.gameObject.GetComponent<Completed.Player>().getAttacked(-1);
+            col.gameObject.GetComponent<Completed.Player>().getHealed();
             //GameController.DamagePlayer(1);
             Destroy(gameObject);
         }
@@ -82,11 +82,5 @@ public class BulletController : MonoBehaviour
         {
             hitOnce = true;
         }
-        //if (collision.collider.tag == "Player" && !isEnemyBullet && hitOnce)
-        //{
-        //    collision.collider.gameObject.GetComponent<Completed.Player>().getAttacked(-1);
-        //    //GameController.DamagePlayer(1);
-        //    Destroy(gameObject);
-        //}
     }
 }

@@ -157,6 +157,15 @@ namespace Completed
 			if(currentHP<=1)
             {
 				//cant shoot
+				foreach(GameObject heart in heartsList)
+                {
+					if (heart.active)
+                    {
+						heart.GetComponent<HeartOnPlayer>().Shake();
+
+						break;
+					}
+                }
 				return;
             }
 

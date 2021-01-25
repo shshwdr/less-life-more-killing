@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour
     public Rigidbody2D rigidbody;
     NavMeshAgent agent;
     Vector3 startPositon;
+    Animator animator;
 
     public GameObject blood;
     public void init(Vector3 p)
@@ -52,6 +53,8 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        animator = GetComponent<Animator>();
+        blood.SetActive(false);
         //agent.updatePosition = false;
     }
 
@@ -140,6 +143,12 @@ public class EnemyController : MonoBehaviour
     {
         //agent.updatePosition = true;
         agent.SetDestination(player.transform.position);
+        Debug.Log("agent speed"+agent.velocity);
+        animator.SetFloat("Speed",agent.velocity.sqrMagnitude);
+        animator.SetFloat("Horizontal", agent.velocity.x);
+
+        animator.SetFloat("Vertical", agent.velocity.y);
+
         //rigidbody.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
         //ri.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
@@ -167,7 +176,9 @@ public class EnemyController : MonoBehaviour
                     bullet.GetComponent<BulletController>().isEnemyBullet = true;
                     StartCoroutine(CoolDown());
                     break;
+
             }
+            animator.SetTrigger("enemyAttack");
         }
     }
 
@@ -180,6 +191,7 @@ public class EnemyController : MonoBehaviour
 
     public void Death()
     {
+        blood.SetActive(true);
         blood.transform.parent = transform.parent;
         //RoomController.instance.StartCoroutine(RoomController.instance.RoomCoroutine());
         Destroy(gameObject);

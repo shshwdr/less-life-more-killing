@@ -44,6 +44,9 @@ namespace Completed
 		public float invicibleTime;
 		bool isInvincible = true;
 
+		float lastShootx;
+		float lastShooty;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
@@ -166,36 +169,43 @@ namespace Completed
 					if (heart.active)
                     {
 						heart.GetComponent<HeartOnPlayer>().Shake();
-
 						break;
 					}
                 }
 				return;
             }
 
+			lastShootx = x;
+			lastShooty = y;
+			animator.SetTrigger("Attack");
+			getDamage();
 
 
+		}
+
+		public void shootBullet()
+        {
+
+			float x = lastShootx;
+			float y = lastShooty;
 			float normalizedX = (x < 0) ? Mathf.Floor(x) : Mathf.Ceil(x);
 
 			float normalizedY = (y < 0) ? Mathf.Floor(y) : Mathf.Ceil(y);
 
-			Vector3 direction = new Vector3(normalizedX, normalizedY,0)*0.1f;
+			Vector3 direction = new Vector3(normalizedX, normalizedY, 0) * 0.1f;
 			//	RaycastHit2D hit = Physics2D.Raycast(transform.position, (Vector2)(direction));
 
 			//if (hit.collider != null)
 			//{
 			//	//it hit a wall, can't 
 			//}
-			GameObject bullet = Instantiate(bulletPrefab, transform.position+ direction, transform.rotation) as GameObject;
+			GameObject bullet = Instantiate(bulletPrefab, transform.position + direction, transform.rotation) as GameObject;
 			//bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
 			bullet.GetComponent<Rigidbody2D>().velocity = new Vector3(
 				(x < 0) ? Mathf.Floor(x) * bulletSpeed : Mathf.Ceil(x) * bulletSpeed,
 				(y < 0) ? Mathf.Floor(y) * bulletSpeed : Mathf.Ceil(y) * bulletSpeed,
 				0
 			);
-			getDamage();
-
-
 		}
 
 

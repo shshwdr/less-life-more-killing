@@ -61,6 +61,7 @@ namespace Completed
             {
 				heartsList[i].SetActive(false);
 			}
+			GameManager.playerHealth = currentHP;
         }
 		public void getAttacked(int damage = 1)
         {
@@ -70,10 +71,8 @@ namespace Completed
             }
 			isInvincible = true;
 			lastAttacked = Time.time;
-			currentHP -= damage;
-			currentHP = Mathf.Clamp(currentHP,0, maxHP);
-			animator.SetBool("GetHit",true); 
-			updateHearts();
+			animator.SetBool("GetHit",true);
+			getDamage(damage);
 
 		}
 
@@ -82,6 +81,7 @@ namespace Completed
 			currentHP -= damage;
 			currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 			updateHearts();
+			CheckIfGameOver();
 		}
 
 		public void getHealed(int heal = 1)
@@ -98,10 +98,9 @@ namespace Completed
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
-			
 			////Get the current food point total stored in GameManager.instance between levels.
 			//food = GameManager.instance.playerFoodPoints;
-			
+
 			////Set the foodText to reflect the current player food total.
 			//foodText.text = "Food: " + food;
 			rb = GetComponent<Rigidbody2D>();
@@ -112,6 +111,9 @@ namespace Completed
 				GameObject heart = hearts.transform.GetChild(i).gameObject;
 				heartsList.Add(heart);
             }
+
+			currentHP = GameManager.playerHealth;
+			updateHearts();
 		}
 		
 		
@@ -296,13 +298,8 @@ namespace Completed
 		private void CheckIfGameOver ()
 		{
 			//Check if food point total is less than or equal to zero.
-			if (food <= 0) 
+			if (currentHP == 0) 
 			{
-				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-				SoundManager.instance.PlaySingle (gameOverSound);
-				
-				//Stop the background music.
-				SoundManager.instance.musicSource.Stop();
 				
 				//Call the GameOver function of GameManager.
 				GameManager.instance.GameOver ();

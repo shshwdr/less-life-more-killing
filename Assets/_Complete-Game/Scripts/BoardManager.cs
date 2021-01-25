@@ -197,7 +197,7 @@ namespace Completed
 			
 			if(level == 1)
             {
-				LayoutObjectAtPosition(tutorial,new Vector3(3.5f,3,0));
+				LayoutObjectAtPosition(tutorial,new Vector3(1.58f,3,0));
             }
             else
             {

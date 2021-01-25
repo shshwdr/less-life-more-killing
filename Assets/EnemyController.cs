@@ -38,6 +38,8 @@ public class EnemyController : MonoBehaviour
     public Rigidbody2D rigidbody;
     NavMeshAgent agent;
     Vector3 startPositon;
+
+    public GameObject blood;
     public void init(Vector3 p)
     {
         startPositon = p;
@@ -178,6 +180,7 @@ public class EnemyController : MonoBehaviour
 
     public void Death()
     {
+        blood.transform.parent = transform.parent;
         //RoomController.instance.StartCoroutine(RoomController.instance.RoomCoroutine());
         Destroy(gameObject);
 

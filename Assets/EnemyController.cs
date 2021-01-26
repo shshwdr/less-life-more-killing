@@ -188,17 +188,36 @@ public class EnemyController : MonoBehaviour
                     StartCoroutine(CoolDown());
                     break;
                 case (EnemyType.Ranged):
-                    var dir = player.transform.position - transform.position;
-                    var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    var quat = Quaternion.AngleAxis(angle, Vector3.forward);
+                    {
+                        var dir = player.transform.position - transform.position;
+                        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        var quat = Quaternion.AngleAxis(angle, Vector3.forward);
 
-                    GameObject bullet = Instantiate(bulletPrefab, transform.position, quat) as GameObject;
-                    bullet.GetComponent<BulletController>().GetPlayer(player.transform);
-                    bullet.GetComponent<Rigidbody2D>().velocity = (player.transform.position - transform.position).normalized*bulletSpeed;
-                    //bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
-                    bullet.GetComponent<BulletController>().isEnemyBullet = true;
-                    StartCoroutine(CoolDown());
+                        GameObject bullet = Instantiate(bulletPrefab, transform.position, quat) as GameObject;
+                        bullet.GetComponent<BulletController>().GetPlayer(player.transform);
+                        bullet.GetComponent<Rigidbody2D>().velocity = (player.transform.position - transform.position).normalized * bulletSpeed;
+                        //bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
+                        bullet.GetComponent<BulletController>().isEnemyBullet = true;
+                        StartCoroutine(CoolDown());
+                    }
                     break;
+                case (EnemyType.RangedNoTarge):
+                    {
+                        Vector2[] dirs = { Vector2.up, Vector2.left, Vector2.down, Vector2.right };
+                        foreach (Vector2 dir in dirs)
+                        {
+                            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                            var quat = Quaternion.AngleAxis(angle, Vector3.forward);
+
+                            GameObject bullet = Instantiate(bulletPrefab, transform.position, quat) as GameObject;
+                            bullet.GetComponent<BulletController>().GetPlayer(player.transform);
+                            bullet.GetComponent<Rigidbody2D>().velocity = dir.normalized * bulletSpeed;
+                            bullet.GetComponent<BulletController>().isEnemyBullet = true;
+                            StartCoroutine(CoolDown());
+                        }
+                    }
+                    break;
+
 
             }
             animator.SetTrigger("Attack");

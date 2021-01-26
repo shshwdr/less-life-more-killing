@@ -45,10 +45,15 @@ public class EnemyController : MonoBehaviour
     public float wanderInterval = 1;
 
 
+    public int maxHP = 1;
+    int currentHP;
+    bool isDead = false;
     public GameObject blood;
 
-    public AudioClip attack;
-    public AudioClip die;
+    public AudioClip attackAudio;
+    public AudioClip dieAudio;
+    AudioSource audioSource;
+    bool isHitBack;
     public void init(Vector3 p)
     {
         startPositon = p;
@@ -58,11 +63,13 @@ public class EnemyController : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         rigidbody = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         animator = GetComponent<Animator>();
         blood.SetActive(false);
+        currentHP = maxHP;
         //agent.updatePosition = false;
     }
 
@@ -71,6 +78,12 @@ public class EnemyController : MonoBehaviour
     {
         if (!GameManager.gameStarted)
         {
+            agent.Stop();
+            return;
+        }
+        if (isHitBack)
+        {
+            agent.Stop();
             return;
         }
         switch (currState)
@@ -150,6 +163,7 @@ public class EnemyController : MonoBehaviour
     void Follow()
     {
         //agent.updatePosition = true;
+        agent.isStopped = false;
         agent.SetDestination(player.transform.position);
         Debug.Log("agent speed"+agent.velocity);
         animator.SetFloat("Speed",agent.velocity.sqrMagnitude);
@@ -187,7 +201,8 @@ public class EnemyController : MonoBehaviour
                     break;
 
             }
-            animator.SetTrigger("enemyAttack");
+            animator.SetTrigger("Attack");
+            audioSource.PlayOneShot(attackAudio);
         }
     }
 
@@ -197,11 +212,34 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(coolDown);
         coolDownAttack = false;
     }
+    public void Damage(int damage = 1)
+    {
+        currentHP -= damage;
+        if (currentHP <= 0 && !isDead)
+        {
+            Death();
+            isDead = true;
+        }
+        else
+        {
 
+            animator.SetTrigger("Hit");
+            animator.SetBool("GetHit", true);
+            isHitBack = true;
+        }
+    }
+    public void Recover()
+    {
+        isHitBack = false;
+
+        animator.SetBool("GetHit", false);
+    }
     public void Death()
     {
+        //Completed.SoundManager.instance.PlayOneShot(dieAudio);
         blood.SetActive(true);
         blood.transform.parent = transform.parent;
+        blood.GetComponent<AudioSource>().PlayOneShot(dieAudio);
         //RoomController.instance.StartCoroutine(RoomController.instance.RoomCoroutine());
         Destroy(gameObject);
 

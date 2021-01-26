@@ -37,6 +37,11 @@ namespace Completed
 			//Play the clip.
 			efxSource.Play ();
 		}
+
+		public void PlayOneShot(AudioClip clip)
+        {
+			efxSource.PlayOneShot(clip);
+        }
 		
 		
 		//RandomizeSfx chooses randomly between various audio clips and slightly changes their pitch.

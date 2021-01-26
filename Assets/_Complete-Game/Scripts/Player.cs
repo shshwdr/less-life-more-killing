@@ -48,6 +48,8 @@ namespace Completed
 		float lastShootx;
 		float lastShooty;
 
+		bool isHitBack = false;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
@@ -73,8 +75,10 @@ namespace Completed
 			isInvincible = true;
 			lastAttacked = Time.time;
 			animator.SetTrigger("Hit");
-			getDamage(damage);
 
+			animator.SetBool("GetHit",true);
+			getDamage(damage);
+			isHitBack = true;
 		}
 
 		public void getDamage(int damage = 1)
@@ -121,7 +125,10 @@ namespace Completed
 		
 		private void Update ()
 		{
-
+            if (isHitBack)
+            {
+				return;
+            }
 			//Check if we are running either in the Unity editor or in a standalone build.
 
 
@@ -214,6 +221,10 @@ namespace Completed
 
 		private void FixedUpdate()
         {
+            if (isHitBack)
+            {
+				return;
+            }
 			rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         }
 
@@ -267,6 +278,11 @@ namespace Completed
 			}
 		}
 		
+		public void Recover()
+        {
+			isHitBack = false;
+
+		}
 		
 		//Restart reloads the scene when called.
 		private void Restart ()
@@ -284,7 +300,7 @@ namespace Completed
 			{
 				
 				//Call the GameOver function of GameManager.
-				GameManager.instance.GameOver ();
+				//GameManager.instance.GameOver ();
 			}
 		}
 	}

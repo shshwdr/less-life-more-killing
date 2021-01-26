@@ -78,11 +78,15 @@ public class BulletController : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-        
-    //}
-    void OnTriggerStay2D(Collider2D col)
+    private void OnTriggerStay2D(Collider2D col)
+    {
+
+        if (isBreaking)
+        {
+            return;
+        }
+    }
+    void OnTriggerEnter2D(Collider2D col)
     {
         if (isBreaking)
         {
@@ -90,7 +94,7 @@ public class BulletController : MonoBehaviour
         }
         if (col.tag == "Enemy" && !isEnemyBullet)
         {
-            col.gameObject.GetComponent<EnemyController>().Death();
+            col.gameObject.GetComponent<EnemyController>().Damage(1);
             //Destroy(gameObject);
         }
         if (col.tag == "Player" && !isEnemyBullet&& hitOnce)

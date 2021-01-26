@@ -9,12 +9,15 @@ public class Exit : MonoBehaviour
     public Sprite openedDoor;
     public Sprite closedDoor;
     Collider2D collider;
+    AudioSource audioSource;
+    public AudioClip doorOpen;
     // Start is called before the first frame update
     void Start()
     {
         render = GetComponent<SpriteRenderer>();
         render.sprite = closedDoor;
         collider = GetComponent<Collider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -32,5 +35,6 @@ public class Exit : MonoBehaviour
         isOpened = true;
         render.sprite = openedDoor;
         collider.isTrigger = true;
+        audioSource.PlayOneShot(doorOpen);
     }
 }

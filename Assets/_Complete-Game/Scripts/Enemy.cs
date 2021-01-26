@@ -82,17 +82,17 @@ namespace Completed
 		//and takes a generic parameter T which we use to pass in the component we expect to encounter, in this case Player
 		protected override void OnCantMove <T> (T component)
 		{
-			//Declare hitPlayer and set it to equal the encountered component.
-			Player hitPlayer = component as Player;
+			////Declare hitPlayer and set it to equal the encountered component.
+			//Player hitPlayer = component as Player;
 			
-			//Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
-			hitPlayer.LoseFood (playerDamage);
+			////Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
+			//hitPlayer.LoseFood (playerDamage);
 			
-			//Set the attack trigger of animator to trigger Enemy attack animation.
-			animator.SetTrigger ("enemyAttack");
+			////Set the attack trigger of animator to trigger Enemy attack animation.
+			//animator.SetTrigger ("enemyAttack");
 			
-			//Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
-			SoundManager.instance.RandomizeSfx (attackSound1, attackSound2);
+			////Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
+			//SoundManager.instance.RandomizeSfx (attackSound1, attackSound2);
 		}
 	}
 }

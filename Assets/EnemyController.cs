@@ -12,10 +12,12 @@ public enum EnemyState
     Attack
 };
 
+
 public enum EnemyType
 {
     Melee,
-    Ranged
+    Ranged,
+    RangedNoTarge,
 };
 
 public class EnemyController : MonoBehaviour
@@ -39,8 +41,14 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent agent;
     Vector3 startPositon;
     Animator animator;
+    public bool ignoreCollider;
+    public float wanderInterval = 1;
+
 
     public GameObject blood;
+
+    public AudioClip attack;
+    public AudioClip die;
     public void init(Vector3 p)
     {
         startPositon = p;

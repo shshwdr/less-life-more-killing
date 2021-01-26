@@ -21,7 +21,8 @@ namespace Completed
 		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
 		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
 		public AudioClip gameOverSound;             //Audio clip to play when player dies.
-
+		public AudioClip hit;
+		public AudioClip attack;
 		public float moveSpeed = 5f;
 		Rigidbody2D rb;
 		Vector2 movement;
@@ -274,25 +275,6 @@ namespace Completed
             //and not load all the scene object in the current scene.
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
 		}
-		
-		
-		//LoseFood is called when an enemy attacks the player.
-		//It takes a parameter loss which specifies how many points to lose.
-		public void LoseFood (int loss)
-		{
-			//Set the trigger for the player animator to transition to the playerHit animation.
-			animator.SetTrigger ("playerHit");
-			
-			////Subtract lost food points from the players total.
-			//food -= loss;
-			
-			////Update the food display with the new total.
-			//foodText.text = "-"+ loss + " Food: " + food;
-			
-			//Check to see if game has ended.
-			CheckIfGameOver ();
-		}
-		
 		
 		//CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 		private void CheckIfGameOver ()

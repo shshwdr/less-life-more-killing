@@ -11,6 +11,9 @@ public class BulletController : MonoBehaviour
     private Vector2 curPos;
     private Vector2 playerPos;
     bool hitOnce;
+
+    public AudioClip bounce;
+    public AudioClip crash;
     // Start is called before the first frame update
     void Start()
     {

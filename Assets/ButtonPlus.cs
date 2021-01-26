@@ -7,7 +7,18 @@ public class ButtonPlus : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 {
 
     public Text theText;
+    AudioSource audio;
 
+    void Start()
+    {
+        audio = GetComponent<AudioSource>();
+
+    }
+
+    public void OnClick()
+    {
+        audio.Play();
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
         theText.color = Color.red; //Or however you do your color

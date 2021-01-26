@@ -43,16 +43,16 @@ public class BulletController : MonoBehaviour
             return;
         }
         liveTime += Time.deltaTime;
-        if (isEnemyBullet)
-        {
-            curPos = transform.position;
-            transform.position = Vector2.MoveTowards(transform.position, playerPos, 5f * Time.deltaTime);
-            if (curPos == lastPos)
-            {
-                Destroy(gameObject);
-            }
-            lastPos = curPos;
-        }
+        //if (isEnemyBullet)
+        //{
+        //    curPos = transform.position;
+        //    transform.position = Vector2.MoveTowards(transform.position, playerPos, 5f * Time.deltaTime);
+        //    //if (curPos == lastPos)
+        //    //{
+        //    //    Destroy(gameObject);
+        //    //}
+        //    lastPos = curPos;
+        //}
     }
 
     public void GetPlayer(Transform player)
@@ -103,20 +103,20 @@ public class BulletController : MonoBehaviour
         {
             col.gameObject.GetComponent<Completed.Player>().getAttacked();
             //GameController.DamagePlayer(1);
-            Destroy(gameObject);
+            DestorySelf();
         }
         if (col.tag == "wall" && isEnemyBullet)
         {
             //col.gameObject.GetComponent<Completed.Player>().getAttacked();
             //GameController.DamagePlayer(1);
-            Destroy(gameObject);
+            DestorySelf();
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (liveTime > lifeTime)
+        if (liveTime > lifeTime && !isBreaking)
         {
             DestorySelf();
         }

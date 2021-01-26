@@ -180,6 +180,7 @@ public class EnemyController : MonoBehaviour
 
                     GameObject bullet = Instantiate(bulletPrefab, transform.position, quat) as GameObject;
                     bullet.GetComponent<BulletController>().GetPlayer(player.transform);
+                    bullet.GetComponent<Rigidbody2D>().velocity = (player.transform.position - transform.position).normalized*bulletSpeed;
                     //bullet.AddComponent<Rigidbody2D>().gravityScale = 0;
                     bullet.GetComponent<BulletController>().isEnemyBullet = true;
                     StartCoroutine(CoolDown());

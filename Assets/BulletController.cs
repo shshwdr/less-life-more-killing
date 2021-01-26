@@ -11,21 +11,38 @@ public class BulletController : MonoBehaviour
     private Vector2 curPos;
     private Vector2 playerPos;
     bool hitOnce;
-
+    Rigidbody2D rigidbody;
+    Animator animator;
+    bool isBreaking;
     public AudioClip bounce;
     public AudioClip crash;
+    public AudioClip shoot;
+    AudioSource audioSource;
+    float liveTime = 0;
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(DeathDelay());
+        audioSource = GetComponent<AudioSource>();
+        //StartCoroutine(DeathDelay());
         if (!isEnemyBullet)
         {
             //transform.localScale = new Vector2(GameController.BulletSize, GameController.BulletSize);
+        }
+        rigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        if (shoot)
+        {
+            audioSource.PlayOneShot(shoot);
         }
     }
 
     void Update()
     {
+        if (isBreaking)
+        {
+            return;
+        }
+        liveTime += Time.deltaTime;
         if (isEnemyBullet)
         {
             curPos = transform.position;
@@ -46,6 +63,19 @@ public class BulletController : MonoBehaviour
     IEnumerator DeathDelay()
     {
         yield return new WaitForSeconds(lifeTime);
+        DestorySelf();
+    }
+    void DestorySelf()
+    {
+        isBreaking = true;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.angularVelocity = 0;
+        animator.SetTrigger("Break");
+        audioSource.Stop();
+    }
+
+    public void DestoryIt()
+    {
         Destroy(gameObject);
     }
     //private void OnTriggerStay2D(Collider2D collision)
@@ -54,6 +84,10 @@ public class BulletController : MonoBehaviour
     //}
     void OnTriggerStay2D(Collider2D col)
     {
+        if (isBreaking)
+        {
+            return;
+        }
         if (col.tag == "Enemy" && !isEnemyBullet)
         {
             col.gameObject.GetComponent<EnemyController>().Death();
@@ -81,6 +115,16 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
+        if (liveTime > lifeTime)
+        {
+            DestorySelf();
+        }
+        if (bounce && collision.collider.tag != "Player"&& collision.collider.tag != "Enemy")
+        {
+
+            audioSource.PlayOneShot(bounce);
+        }
         if (!hitOnce && collision.collider.tag != "Player")
         {
             hitOnce = true;

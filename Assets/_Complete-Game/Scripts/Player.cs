@@ -72,7 +72,7 @@ namespace Completed
             }
 			isInvincible = true;
 			lastAttacked = Time.time;
-			animator.SetBool("GetHit",true);
+			animator.SetTrigger("Hit");
 			getDamage(damage);
 
 		}

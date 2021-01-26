@@ -49,6 +49,7 @@ namespace Completed
 		float lastShooty;
 
 		bool isHitBack = false;
+		AudioSource audioSource;
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
@@ -101,6 +102,7 @@ namespace Completed
 		//Start overrides the Start function of MovingObject
 		protected void Start ()
 		{
+			audioSource = GetComponent<AudioSource>();
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
 			////Get the current food point total stored in GameManager.instance between levels.
@@ -298,9 +300,12 @@ namespace Completed
 			//Check if food point total is less than or equal to zero.
 			if (currentHP == 0) 
 			{
-				
-				//Call the GameOver function of GameManager.
-				//GameManager.instance.GameOver ();
+                if (GameManager.instance.wouldDie)
+                {
+					//Call the GameOver function of GameManager.
+					GameManager.instance.GameOver();
+					audioSource.PlayOneShot(gameOverSound);
+				}
 			}
 		}
 	}

@@ -19,6 +19,8 @@ public class StartMenu : MonoBehaviour
 
     public void StartGame()
     {
+
+        Time.timeScale = 1;
         var gm = GameObject.FindObjectOfType<GameManager>();
         if (gm)
         {

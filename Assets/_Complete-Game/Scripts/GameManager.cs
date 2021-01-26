@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
 
     GameObject restartMenu;
     Text restartText;
+    public bool wouldDie = false;
+    bool isGameOver = false;
     //Awake is always called before any Start functions
     void Awake()
     {
@@ -124,12 +126,10 @@ public class GameManager : MonoBehaviour
     //Update is called every frame.
     void Update()
     {
-        //Check that playersTurn or enemiesMoving or doingSetup are not currently true.
-        if (playersTurn || enemiesMoving || doingSetup)
-
-            //If any of these are true, return and do not start MoveEnemies.
-            return;
-
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            wouldDie = !wouldDie;
+        }
     }
 
     //Call this to add the passed in Enemy to the List of Enemy objects.
@@ -151,6 +151,8 @@ public class GameManager : MonoBehaviour
 
         //Disable this GameManager.
         enabled = false;
+        Time.timeScale = 0;
+        isGameOver = true;
     }
 
 }

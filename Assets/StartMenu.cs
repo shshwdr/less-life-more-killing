@@ -27,6 +27,7 @@ public class StartMenu : MonoBehaviour
             gm.level = 0;
             GameManager.playerHealth = 3;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+            GameManager.instance.playedTime += 1;
         }
     }
 }

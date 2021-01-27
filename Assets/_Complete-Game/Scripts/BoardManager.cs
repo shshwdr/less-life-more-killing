@@ -46,6 +46,8 @@ namespace Completed
 		public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
 		public GameObject tutorial;
 		public GameObject tutorialEnemy;
+		public GameObject Ghost;
+		public GameObject[] graffiti;
 		
 		private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 		private List <Vector3> gridPositions = new List <Vector3> ();	//A list of possible locations to place tiles.
@@ -198,7 +200,10 @@ namespace Completed
 			if(level == 1)
             {
 				LayoutObjectAtPosition(tutorial,new Vector3(1.58f,3,0));
-            }
+				//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
+				int graffitiCount = Math.Min(GameManager.instance.playedTime, 6);
+				LayoutObjectAtRandom(graffiti, graffitiCount, graffitiCount);
+			}
             else
             {
 				//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
@@ -209,30 +214,48 @@ namespace Completed
 			}
 
 			//Determine number of enemies based on current level number, based on a logarithmic progression
-			int enemyCount = level;//(int)Mathf.Log(level, 2f);
-
+			int enemyCount = (int)Mathf.Log(level, 2f) + (Random.Range(0,2)>0?1:0);
+			if(level == 1)
+            {
+				enemyCount = 1;
+            }
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
 			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity,parent);
-			StartCoroutine(ExampleCoroutine(enemyCount));
+			StartCoroutine(ExampleCoroutine(enemyCount,level));
 
 		}
-		IEnumerator ExampleCoroutine(int enemyCount)
+		IEnumerator ExampleCoroutine(int enemyCount,int level)
 		{
 			//Print the time of when the function is first called.
 			//Debug.Log("Started Coroutine at timestamp : " + Time.time);
 
 			//yield on a new YieldInstruction that waits for 5 seconds.
 			yield return new WaitForSeconds(0.1f);
-			if(enemyCount == 1)
+			if(level == 1)
             {
+                if (GameManager.instance.playedTime > 0)
+                {
+					
 
-				LayoutEnemyAtPosition(tutorialEnemy, gridPositions[gridPositions.Count - columns / 2]);
+
+					LayoutEnemyAtPosition(Ghost, gridPositions[gridPositions.Count - columns / 2]);
+
+                }
+                else
+                {
+
+					LayoutEnemyAtPosition(tutorialEnemy, gridPositions[gridPositions.Count - columns / 2]);
+				}
             }
             else
 			{
 				LayoutEnemyAtRandom(enemyTiles, enemyCount, enemyCount);
+                if (GameManager.instance.DiedBefore.ContainsKey(level))
+                {
 
+					LayoutEnemyAtRandom(new GameObject[] { Ghost }, 1, 1);
+				}
 			}
 			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
 			//After we have waited 5 seconds print the time again.

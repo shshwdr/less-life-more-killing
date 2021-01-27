@@ -192,6 +192,8 @@ namespace Completed
 			animator.SetTrigger("Attack");
 			getDamage();
 
+			GameManager.gameStarted = true; 
+
 
 		}
 

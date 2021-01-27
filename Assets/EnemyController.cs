@@ -152,6 +152,7 @@ public class EnemyController : MonoBehaviour
 
             GameObject summon = Instantiate(summonMonster, transform.position, transform.rotation,transform.parent) as GameObject;
 
+            summon.GetComponent<EnemyController>().init(transform.position);
             GameManager.enemyCount += 1;
         }
     }
@@ -349,7 +350,11 @@ public class EnemyController : MonoBehaviour
         //Completed.SoundManager.instance.PlayOneShot(dieAudio);
         blood.SetActive(true);
         blood.transform.parent = transform.parent;
-        blood.GetComponent<AudioSource>().PlayOneShot(dieAudio);
+        if (dieAudio)
+        {
+
+            blood.GetComponent<AudioSource>().PlayOneShot(dieAudio);
+        }
         //RoomController.instance.StartCoroutine(RoomController.instance.RoomCoroutine());
         Destroy(gameObject);
 

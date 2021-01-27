@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private bool enemiesMoving;                             //Boolean to check if enemies are moving.
     private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
 
-
+    
     public static int enemyCount;
     public static bool gameStarted = false;
     public static int playerHealth = 3;
@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     Text restartText;
     public bool wouldDie = false;
     bool isGameOver = false;
+
+    public int playedTime = 0;
+    public Dictionary<int, bool> DiedBefore;
     //Awake is always called before any Start functions
     void Awake()
     {
@@ -59,6 +62,7 @@ public class GameManager : MonoBehaviour
 
         //Call the InitGame function to initialize the first level 
         InitGame();
+        DiedBefore = new Dictionary<int, bool>();
     }
 
     //this is called only once, and the paramter tell it to be called only after the scene was loaded
@@ -153,6 +157,7 @@ public class GameManager : MonoBehaviour
         enabled = false;
         Time.timeScale = 0;
         isGameOver = true;
+        DiedBefore[level] = true;
     }
 
 }

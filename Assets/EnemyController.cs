@@ -54,6 +54,15 @@ public class EnemyController : MonoBehaviour
     public AudioClip dieAudio;
     AudioSource audioSource;
     bool isHitBack;
+
+    public float summonTime = 0;
+    public GameObject summonMonster;
+    float summonPastTime;
+
+    public bool isAvoidingPlayer;
+    Vector3 targetPosition;
+
+
     public void init(Vector3 p)
     {
         startPositon = p;
@@ -70,6 +79,10 @@ public class EnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
         blood.SetActive(false);
         currentHP = maxHP;
+        if (ignoreCollider)
+        {
+            agent.enabled = false;
+        }
         //agent.updatePosition = false;
     }
 
@@ -78,12 +91,14 @@ public class EnemyController : MonoBehaviour
     {
         if (!GameManager.gameStarted)
         {
-            agent.Stop();
+            if (agent.enabled)
+                agent.Stop();
             return;
         }
         if (isHitBack)
         {
-            agent.Stop();
+            if (agent.enabled)
+                agent.Stop();
             return;
         }
         switch (currState)
@@ -129,6 +144,16 @@ public class EnemyController : MonoBehaviour
         {
             currState = EnemyState.Idle;
         }
+        summonPastTime += Time.deltaTime;
+
+        if (summonMonster&&summonPastTime >= summonTime)
+        {
+            summonPastTime = 0;
+
+            GameObject summon = Instantiate(summonMonster, transform.position, transform.rotation,transform.parent) as GameObject;
+
+            GameManager.enemyCount += 1;
+        }
     }
 
     private bool IsPlayerInRange(float range)
@@ -166,6 +191,31 @@ public class EnemyController : MonoBehaviour
         if ((dist != Mathf.Infinity && agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0) || agent.velocity.sqrMagnitude<=0.01f)
         {
             var newDestination = RandomNavSphere(transform.position);
+
+
+            if (isAvoidingPlayer)
+            {
+                float currentDistance = (transform.position - player.transform.position).magnitude;
+                bool findFurthest = false;
+                Vector3 findTarget = Vector3.zero;
+                for (int i = 0; i < 10; i++)
+                {
+                    var tempDestination = RandomNavSphere(transform.position);
+                    float newDistance = (tempDestination - player.transform.position).magnitude;
+                    if (newDistance > currentDistance)
+                    {
+                        currentDistance = newDistance;
+                        findTarget = newDestination;
+                        findFurthest = true;
+                    }
+                }
+                if (findFurthest)
+                {
+                    newDestination = findTarget;
+                }
+
+            }
+
             agent.SetDestination(newDestination);
         }
             //if (!chooseDir)
@@ -189,21 +239,36 @@ public class EnemyController : MonoBehaviour
     void Follow()
     {
         //agent.updatePosition = true;
-        agent.isStopped = false;
-        agent.SetDestination(player.transform.position);
-        //Debug.Log("agent speed"+agent.velocity);
-        animator.SetFloat("Speed",agent.velocity.sqrMagnitude);
-        animator.SetFloat("Horizontal", agent.velocity.x);
+        if (!ignoreCollider)
+        {
+            //else
+            {
 
-        animator.SetFloat("Vertical", agent.velocity.y);
+                agent.isStopped = false;
+                agent.SetDestination(player.transform.position);
+                //Debug.Log("agent speed"+agent.velocity);
+                animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+                animator.SetFloat("Horizontal", agent.velocity.x);
 
-        //rigidbody.MovePosition(Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime));
-        //ri.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+                animator.SetFloat("Vertical", agent.velocity.y);
+            }
+        }
+        else
+        {
+
+            var moveToPosition = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+            rigidbody.MovePosition(moveToPosition);
+            //ri.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        }
     }
 
     void Attack()
     {
-        agent.SetDestination(transform.position);
+        if (agent.enabled)
+        {
+
+            agent.SetDestination(transform.position);
+        }
         if (!coolDownAttack)
         {
             switch (enemyType)

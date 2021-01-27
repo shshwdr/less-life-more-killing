@@ -204,7 +204,7 @@ namespace Completed
 
 			float normalizedY = (y < 0) ? Mathf.Floor(y) : Mathf.Ceil(y);
 
-			Vector3 direction = new Vector3(normalizedX, normalizedY, 0) * 0.1f;
+			Vector3 direction = new Vector3(normalizedX, normalizedY, 0) * 0.15f;
 			//	RaycastHit2D hit = Physics2D.Raycast(transform.position, (Vector2)(direction));
 
 			//if (hit.collider != null)

@@ -146,18 +146,44 @@ public class EnemyController : MonoBehaviour
         chooseDir = false;
     }
 
+    public static Vector3 RandomNavSphere(Vector3 origin, float distance = 10)
+    {
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
+
+        randomDirection += origin;
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randomDirection, out navHit, distance, NavMesh.AllAreas);
+
+        return navHit.position;
+    }
+
     void Wander()
     {
-        //if (!chooseDir)
-        //{
-        //    StartCoroutine(ChooseDirection());
-        //}
+        agent.isStopped = false;
+        float dist = agent.remainingDistance; 
+        if ((dist != Mathf.Infinity && agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance == 0) || agent.velocity.sqrMagnitude<=0.01f)
+        {
+            var newDestination = RandomNavSphere(transform.position);
+            agent.SetDestination(newDestination);
+        }
+            //if (!chooseDir)
+            //{
+            //    StartCoroutine(ChooseDirection());
+            //}
 
-        //transform.position += -transform.right * speed * Time.deltaTime;
-        //if (IsPlayerInRange(range))
-        //{
-        //    currState = EnemyState.Follow;
-        //}
+            //transform.position += -transform.right * speed * Time.deltaTime;
+            //if (IsPlayerInRange(range))
+            //{
+            //    currState = EnemyState.Follow;
+            //}
+
+
+            animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+        animator.SetFloat("Horizontal", agent.velocity.x);
+
+        animator.SetFloat("Vertical", agent.velocity.y);
     }
 
     void Follow()
@@ -165,7 +191,7 @@ public class EnemyController : MonoBehaviour
         //agent.updatePosition = true;
         agent.isStopped = false;
         agent.SetDestination(player.transform.position);
-        Debug.Log("agent speed"+agent.velocity);
+        //Debug.Log("agent speed"+agent.velocity);
         animator.SetFloat("Speed",agent.velocity.sqrMagnitude);
         animator.SetFloat("Horizontal", agent.velocity.x);
 

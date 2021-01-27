@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
 
         //Set the text of levelText to the string "Day" and append the current level number.
-        levelText.text = "Day " + level;
+        levelText.text = "Level " + level;
         restartMenu = GameObject.Find("Restart");
 
         restartText = GameObject.Find("RestartText").GetComponent<Text>();

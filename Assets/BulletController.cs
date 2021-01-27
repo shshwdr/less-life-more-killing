@@ -19,6 +19,7 @@ public class BulletController : MonoBehaviour
     public AudioClip shoot;
     AudioSource audioSource;
     float liveTime = 0;
+    public bool ignoreWall;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +44,9 @@ public class BulletController : MonoBehaviour
             return;
         }
         liveTime += Time.deltaTime;
+        if (liveTime > lifeTime && ignoreWall) {
+            DestorySelf();
+        }
         //if (isEnemyBullet)
         //{
         //    curPos = transform.position;
@@ -70,7 +74,16 @@ public class BulletController : MonoBehaviour
         isBreaking = true;
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = 0;
-        animator.SetTrigger("Break");
+        if (animator)
+        {
+
+            animator.SetTrigger("Break");
+        }
+        else
+        {
+            DestoryIt();
+
+        }
         audioSource.Stop();
     }
 
@@ -85,6 +98,12 @@ public class BulletController : MonoBehaviour
         {
             return;
         }
+        if (col.tag == "Player" && !isEnemyBullet && hitOnce)
+        {
+            col.gameObject.GetComponent<Completed.Player>().getHealed();
+            //GameController.DamagePlayer(1);
+            Destroy(gameObject);
+        }
     }
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -97,19 +116,13 @@ public class BulletController : MonoBehaviour
             col.gameObject.GetComponent<EnemyController>().Damage(1);
             //Destroy(gameObject);
         }
-        if (col.tag == "Player" && !isEnemyBullet&& hitOnce)
-        {
-            col.gameObject.GetComponent<Completed.Player>().getHealed();
-            //GameController.DamagePlayer(1);
-            Destroy(gameObject);
-        }
         if (col.tag == "Player" && isEnemyBullet)
         {
             col.gameObject.GetComponent<Completed.Player>().getAttacked();
             //GameController.DamagePlayer(1);
             DestorySelf();
         }
-        if (col.tag == "wall" && isEnemyBullet)
+        if (col.tag == "wall" && isEnemyBullet && !ignoreWall)
         {
             //col.gameObject.GetComponent<Completed.Player>().getAttacked();
             //GameController.DamagePlayer(1);

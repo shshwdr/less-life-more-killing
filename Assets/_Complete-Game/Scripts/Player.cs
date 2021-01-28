@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            getHealed();
+            //getHealed();
         }
         if (Time.time > lastAttacked + invicibleTime)
         {

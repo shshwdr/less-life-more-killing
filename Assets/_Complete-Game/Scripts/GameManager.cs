@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            wouldDie = !wouldDie;
+            //wouldDie = !wouldDie;
         }
     }
 

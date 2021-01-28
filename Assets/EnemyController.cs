@@ -360,7 +360,7 @@ public class EnemyController : MonoBehaviour
     }
     public void Death()
     {
-        Debug.Log(name + " died");
+        //Debug.Log(name + " died");
         isDead = true;
         //Completed.SoundManager.instance.PlayOneShot(dieAudio);
         blood.SetActive(true);

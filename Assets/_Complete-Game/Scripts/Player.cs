@@ -95,10 +95,14 @@ public class Player : MonoBehaviour
 
     public void getHealed(int heal = 1)
     {
+        int originHP = currentHP;
         currentHP += heal;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
         updateHearts();
-        audioSource.PlayOneShot(healClip);
+        if (currentHP > originHP)
+        {
+            audioSource.PlayOneShot(healClip);
+        }
     }
 
 

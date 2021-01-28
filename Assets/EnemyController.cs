@@ -89,6 +89,10 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!player)
+        {
+            return;
+        }
         if (!GameManager.gameStarted)
         {
             if (agent.enabled)
@@ -244,6 +248,10 @@ public class EnemyController : MonoBehaviour
 
     void Follow()
     {
+        if (!player)
+        {
+            return;
+        }
         //agent.updatePosition = true;
         if (!ignoreCollider)
         {
@@ -333,8 +341,8 @@ public class EnemyController : MonoBehaviour
         currentHP -= damage;
         if (currentHP <= 0 && !isDead)
         {
-            Death();
             isDead = true;
+            Death();
         }
         else
         {
@@ -352,6 +360,8 @@ public class EnemyController : MonoBehaviour
     }
     public void Death()
     {
+        Debug.Log(name + " died");
+        isDead = true;
         //Completed.SoundManager.instance.PlayOneShot(dieAudio);
         blood.SetActive(true);
         blood.transform.parent = transform.parent;

@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
         enemies.Clear();
 
         //Call the SetupScene function of the BoardManager script, pass it current level number.
+        boardScript.StopAllCoroutines();
         boardScript.SetupScene(level);
 
     }
@@ -149,6 +150,7 @@ public class GameManager : MonoBehaviour
     //GameOver is called when the player reaches 0 food points
     public void GameOver()
     {
+        StopAllCoroutines();
         SoundManager.instance.PlayGameOver();
         //Set levelText to display number of levels passed and game over message
         restartText.text = "After " + level + " days, you died.";

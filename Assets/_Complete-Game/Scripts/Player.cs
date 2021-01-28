@@ -10,7 +10,7 @@ using Completed;
 //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 public class Player : MonoBehaviour
 {
-    public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
+    public float restartLevelDelay = 0f;        //Delay time in seconds to restart level.
     public int pointsPerFood = 10;              //Number of points to add to player food points when picking up a food object.
     public int pointsPerSoda = 20;              //Number of points to add to player food points when picking up a soda object.
     public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public AudioClip hit;
     public AudioClip attack;
     public AudioClip failShoot;
+    public AudioClip healClip;
     public float moveSpeed = 5f;
     Rigidbody2D rb;
     Vector2 movement;
@@ -97,7 +98,7 @@ public class Player : MonoBehaviour
         currentHP += heal;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
         updateHearts();
-
+        audioSource.PlayOneShot(healClip);
     }
 
 
@@ -140,14 +141,14 @@ public class Player : MonoBehaviour
             return;
         }
         //Check if we are running either in the Unity editor or in a standalone build.
-        if (Input.anyKeyDown)
-        {
-            GameManager.instance.hasPressedKey = true;
-        }
-        if (!GameManager.instance.hasPressedKey)
-        {
-            return;
-        }
+        //if (Input.anyKeyDown)
+        //{
+        //    GameManager.instance.hasPressedKey = true;
+        //}
+        //if (!GameManager.instance.hasPressedKey)
+        //{
+        //    return;
+        //}
 
         //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -207,6 +208,8 @@ public class Player : MonoBehaviour
         lastShooty = y;
         animator.SetTrigger("Attack");
         getDamage();
+        flyingHp += 1;
+        //Debug.Log("flying hp shoot" + flyingHp);
         GameManager.gameStarted = true;
 
 
@@ -236,7 +239,6 @@ public class Player : MonoBehaviour
             0
         );
         bullet.GetComponent<BulletController>().shooter = this;
-        flyingHp += 1;
     }
 
 

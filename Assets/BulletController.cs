@@ -75,6 +75,8 @@ public class BulletController : MonoBehaviour
         if (shooter)
         {
             shooter.flyingHp -= 1;
+
+            //Debug.Log("flying hp add " + shooter.flyingHp);
         }
         isBreaking = true;
         rigidbody.velocity = Vector3.zero;
@@ -107,6 +109,12 @@ public class BulletController : MonoBehaviour
         {
             col.gameObject.GetComponent<Player>().getHealed();
             //GameController.DamagePlayer(1);
+            if (shooter)
+            {
+
+                shooter.flyingHp -= 1;
+                //Debug.Log("flyinghp collect back " + shooter.flyingHp);
+            }
             Destroy(gameObject);
         }
     }

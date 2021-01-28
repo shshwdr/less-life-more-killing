@@ -159,7 +159,12 @@ public class EnemyController : MonoBehaviour
 
     private bool IsPlayerInRange(float range)
     {
-        return Vector3.Distance(transform.position, player.transform.position) <= range;
+        if (player)
+        {
+
+            return Vector3.Distance(transform.position, player.transform.position) <= range;
+        }
+        return false;
     }
 
     private IEnumerator ChooseDirection()
@@ -275,7 +280,7 @@ public class EnemyController : MonoBehaviour
             switch (enemyType)
             {
                 case (EnemyType.Melee):
-                    player.GetComponent<Completed.Player>().getAttacked();
+                    player.GetComponent<Player>().getAttacked();
                     //GameController.DamagePlayer(1);
                     StartCoroutine(CoolDown());
                     break;

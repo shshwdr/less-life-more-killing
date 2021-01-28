@@ -32,10 +32,11 @@ public class GameManager : MonoBehaviour
     GameObject restartMenu;
     Text restartText;
     public bool wouldDie = false;
-    bool isGameOver = false;
+    public bool isGameOver = false;
 
     public int playedTime = 0;
     public Dictionary<int, bool> DiedBefore;
+    public bool hasPressedKey = false;
     //Awake is always called before any Start functions
     void Awake()
     {
@@ -85,8 +86,9 @@ public class GameManager : MonoBehaviour
     //Initializes the game for each level.
     void InitGame()
     {
-        //While doingSetup is true the player can't move, prevent player from moving while title card is up.
-        doingSetup = true;
+        hasPressedKey = false;
+           //While doingSetup is true the player can't move, prevent player from moving while title card is up.
+           doingSetup = true;
         gameStarted = false;
         enemyCount = 1;
         //Get a reference to our image LevelImage by finding it by name.
@@ -147,6 +149,7 @@ public class GameManager : MonoBehaviour
     //GameOver is called when the player reaches 0 food points
     public void GameOver()
     {
+        SoundManager.instance.PlayGameOver();
         //Set levelText to display number of levels passed and game over message
         restartText.text = "After " + level + " days, you died.";
 

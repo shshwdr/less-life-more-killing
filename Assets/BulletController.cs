@@ -20,6 +20,7 @@ public class BulletController : MonoBehaviour
     AudioSource audioSource;
     float liveTime = 0;
     public bool ignoreWall;
+    public Player shooter;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +72,10 @@ public class BulletController : MonoBehaviour
     }
     void DestorySelf()
     {
+        if (shooter)
+        {
+            shooter.flyingHp -= 1;
+        }
         isBreaking = true;
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = 0;
@@ -100,7 +105,7 @@ public class BulletController : MonoBehaviour
         }
         if (col.tag == "Player" && !isEnemyBullet && hitOnce)
         {
-            col.gameObject.GetComponent<Completed.Player>().getHealed();
+            col.gameObject.GetComponent<Player>().getHealed();
             //GameController.DamagePlayer(1);
             Destroy(gameObject);
         }
@@ -118,7 +123,7 @@ public class BulletController : MonoBehaviour
         }
         if (col.tag == "Player" && isEnemyBullet)
         {
-            col.gameObject.GetComponent<Completed.Player>().getAttacked();
+            col.gameObject.GetComponent<Player>().getAttacked();
             //GameController.DamagePlayer(1);
             DestorySelf();
         }

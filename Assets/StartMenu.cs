@@ -21,6 +21,8 @@ public class StartMenu : MonoBehaviour
     {
 
         Time.timeScale = 1;
+        GameManager.instance.isGameOver = false;
+        Completed.SoundManager.instance.PlayMainGame();
         var gm = GameObject.FindObjectOfType<GameManager>();
         if (gm)
         {

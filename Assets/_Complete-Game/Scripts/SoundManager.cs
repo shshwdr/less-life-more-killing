@@ -9,8 +9,10 @@ namespace Completed
 		public AudioSource musicSource;					//Drag a reference to the audio source which will play the music.
 		public static SoundManager instance = null;		//Allows other scripts to call functions from SoundManager.				
 		public float lowPitchRange = .95f;				//The lowest a sound effect will be randomly pitched.
-		public float highPitchRange = 1.05f;			//The highest a sound effect will be randomly pitched.
-		
+		public float highPitchRange = 1.05f;            //The highest a sound effect will be randomly pitched.
+
+		public AudioClip gameOverClip;
+		public AudioClip mainGameClip;
 		
 		void Awake ()
 		{
@@ -27,7 +29,18 @@ namespace Completed
 			DontDestroyOnLoad (gameObject);
 		}
 		
-		
+		public void PlayGameOver()
+        {
+			musicSource.clip = gameOverClip;
+			musicSource.Play();
+        }
+
+		public void PlayMainGame()
+		{
+			musicSource.clip = mainGameClip;
+			musicSource.Play();
+		}
+
 		//Used to play single sound clips.
 		public void PlaySingle(AudioClip clip)
 		{

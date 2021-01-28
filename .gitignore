@@ -8,6 +8,7 @@ Library/
 Assets/AssetStoreTools*
 builds
 windowsBuild
+pakcedBuild
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #

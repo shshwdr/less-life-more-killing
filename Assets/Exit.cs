@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class Exit : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Exit : MonoBehaviour
         render.sprite = closedDoor;
         collider = GetComponent<Collider2D>();
         audioSource = GetComponent<AudioSource>();
+        GetComponentInChildren<Light2D>().enabled = false;
     }
 
     // Update is called once per frame
@@ -36,5 +38,6 @@ public class Exit : MonoBehaviour
         render.sprite = openedDoor;
         collider.isTrigger = true;
         audioSource.PlayOneShot(doorOpen);
+        GetComponentInChildren<Light2D>().enabled = true;
     }
 }
